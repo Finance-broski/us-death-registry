@@ -1,27 +1,27 @@
 ticker,exit_type,acquirer_or_note,exit_year,exit_date,source_url,verified,ticker_recycled,notes
 ACE,,,,,,False,False,
 ADS,,,,,,False,False,
-AGN,acquisition,AbbVie,2020,,,False,False,
-AKS,acquisition,Cleveland-Cliffs,2020,,,False,False,
+AGN,acquisition,AbbVie,2020,2020-05-08,https://news.abbvie.com/2020-05-08-AbbVie-Completes-Transformative-Acquisition-of-Allergan,True,False,AGN ceased NYSE trading at close of completion day
+AKS,acquisition,Cleveland-Cliffs,2020,2020-03-13,https://www.sec.gov/Archives/edgar/data/764065/000076406520000089/ex991-202003138xk.htm,True,False,8-K press-release exhibit confirms completion 2020-03-13
 ALTR,,,,,,False,False,
-ALXN,acquisition,AstraZeneca,2021,,,False,False,
-APOL,take-private,Apollo Global consortium,2017,,,False,False,
+ALXN,acquisition,AstraZeneca,2021,2021-07-21,https://www.sec.gov/Archives/edgar/data/901832/000165495421008091/a0164g.htm,True,False,AZN 6-K Acquisition of Alexion completed filed 2021-07-21
+APOL,take-private,Vistria Group + Apollo Global Management funds + Najafi Companies consortium,2017,2017-02-01,https://www.sec.gov/Archives/edgar/data/929887/000119312517026959/d329920dex991.htm,True,False,$10.00/share cash; delisted on close
 ARG,,,,,,False,False,
-AVP,acquisition,Natura,2020,,,False,False,
+AVP,acquisition,Natura &Co,2020,2020-01-03,https://www.sec.gov/Archives/edgar/data/8868/000095015720000022/form8-k.htm,True,False,8-K Item 2.01 merger consummated 2020-01-03; NYSE delisting same filing
 AYE,,,,,,False,False,
 BCR,,,,,,False,False,
-BHI,merger,GE (Baker Hughes GE),2017,,,False,False,
-BIG,bankruptcy,,2024,,,False,False,
+BHI,merger,GE Oil & Gas (formed Baker Hughes a GE Company),2017,2017-07-03,https://investors.bakerhughes.com/news/press-releases/news-details/2017/Baker-Hughes-and-GE-Oil-Gas-Complete-Combination-Creating-the-Worlds-First-and-Only-Fullstream-Oil-and-Gas-Company-07-03-2017/default.aspx,True,False,BHI retired; BHGE began NYSE trading 2017-07-05
+BIG,bankruptcy,Chapter 11 petition (Delaware); assets later sold to Gordon Brothers/Variety Wholesalers,2024,2024-09-09,https://www.prnewswire.com/news-releases/big-lots-inc-enters-into-sale-agreement-with-nexus-capital-management-lp-302241535.html,True,False,petition date; original Nexus sale agreement later collapsed; NYSE delisted
 BJS,,,,,,False,False,
 BMC,,,,,,False,False,
-BRCM,acquisition,Avago (became AVGO),2016,,,False,False,
-CA,acquisition,Broadcom,2018,,,False,False,
+BRCM,acquisition,Avago Technologies (combined co renamed Broadcom Limited),2016,2016-02-01,https://www.sec.gov/Archives/edgar/data/1649338/000119312516446865/d47106dex991.htm,True,False,last BRCM trading day 2016-01-29; AVGO survives
+CA,acquisition,Broadcom,2018,2018-11-05,https://www.prnewswire.com/news-releases/broadcom-inc-completes-acquisition-of-ca-technologies-300743810.html,True,True,CA symbol now Xtrackers California Municipal Bond ETF (since 2023)
 CCE,,,,,,False,False,
-CELG,acquisition,Bristol Myers Squibb,2019,,,False,False,
+CELG,acquisition,Bristol Myers Squibb,2019,2019-11-20,https://www.businesswire.com/news/home/20191120005929/en/Bristol-Myers-Squibb-Completes-Acquisition-of-Celgene-Creating-a-Leading-Biopharma-Company,True,False,holders received BMY stock + $50 cash + tradeable CVR
 CEPH,,,,,,False,False,
-CERN,acquisition,Oracle,2022,,,False,False,
+CERN,acquisition,Oracle,2022,2022-06-08,https://www.sec.gov/Archives/edgar/data/804753/000119312522169841/d223229d8k.htm,True,False,tender offer; merger effective and Nasdaq delisting 2022-06-08
 CFN,,,,,,False,False,
-CHK,bankruptcy-emerged,,2020,,,False,False,
+CHK,bankruptcy-emerged,Chapter 11 filed 2020-06-28; emerged via Plan of Reorganization,2021,2021-02-09,https://www.sec.gov/Archives/edgar/data/895126/000089512621000033/ex9922021-02x09pr.htm,True,False,old equity cancelled; new CHK relisted Nasdaq (renamed Expand Energy/EXE 2024)
 CMA,,,,,,False,False,
 COV,,,,,,False,False,
 CSC,,,,,,False,False,
