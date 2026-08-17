@@ -41,3 +41,10 @@ history starts 2025-06-26 - so a 2015 universe that downloads "FB" today gets an
 A wrong row is a bug report worth having. Open an issue with a primary source and it gets
 fixed with the source credited. The file is append-only; corrections are noted, not silently
 overwritten.
+
+## Credited contributions
+Rows that exist because a reader asked or corrected something. Credit belongs on the page and
+in this file, not only in the commit history.
+- **FB** - u/White_Fang_ on r/algotrading (2026-08-18) asked how a name that was both renamed
+  and had its ticker recycled is handled. It was not in the file, because the probe catches
+  names that go invisible and Meta downloads fine. The question is what put it in.

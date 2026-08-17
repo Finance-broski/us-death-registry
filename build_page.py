@@ -38,6 +38,11 @@ FATE_LABEL = {
 FATE_ORDER = ["acquisition", "merger", "take-private", "renamed",
               "bankruptcy-emerged", "bankruptcy", "split"]
 
+# Rows that exist because a reader asked or corrected something. The page promises credit for
+# corrections, so the credit has to be visible on the page, not only in the commit history.
+CREDITS = [("FB", "u/White_Fang_ on r/algotrading", "asked how a name that was both renamed "
+            "and had its ticker recycled is handled, which is how FB got into the file")]
+
 
 def esc(x):
     return html.escape(str(x), quote=True)
@@ -75,6 +80,10 @@ def main():
             f'<td class="mono">{r["exit_date"].date()}</td>'
             f'<td class="mono src"><a href="{esc(r["source_url"])}" rel="nofollow noopener" '
             f'target="_blank">{esc(host(r["source_url"]))}</a></td></tr>')
+
+    credit_rows = "".join(
+        f'<tr><td class="mono tick">{esc(t)}</td><td class="who">{esc(who)}'
+        f'<span class="note">{esc(what)}</span></td></tr>' for t, who, what in CREDITS)
 
     fate_rows = "".join(
         f'<tr><td>{esc(FATE_LABEL.get(k, k))}</td><td class="mono">{int(counts[k])}</td></tr>'
@@ -220,6 +229,10 @@ body.registry .mini td{{padding:.4rem .8rem}}
     <p>4. A wrong row is a bug report I want. If you can point at a document, send it and it gets
     fixed with the source credited.</p>
   </div>
+
+  <h2>Credited contributions</h2>
+  <p>Rows that exist because someone asked or corrected something.</p>
+  <div class="tablewrap"><table class="mini">{credit_rows}</table></div>
 
   <script data-goatcounter="https://financebroski.goatcounter.com/count"
           async src="//gc.zgo.at/count.js"></script>
