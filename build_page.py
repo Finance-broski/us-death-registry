@@ -221,6 +221,8 @@ body.registry .mini td{{padding:.4rem .8rem}}
     fixed with the source credited.</p>
   </div>
 
+  <script data-goatcounter="https://financebroski.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
   <p class="fine">Built while auditing backtests for survivorship damage; this is the reference
   list that work needed. The rest of the record: <a href="index.html">the audit practice</a>
   &middot; <a href="graveyard.html">the graveyard</a> &middot;
