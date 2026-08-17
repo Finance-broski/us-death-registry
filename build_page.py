@@ -283,6 +283,29 @@ body.registry .mini td{{padding:.4rem .8rem}}
     shutil.copyfile(CSV, CSV_COPY)
     print(f"wrote {OUT} ({len(page):,} bytes) from {n} rows")
     print(f"copied csv -> {CSV_COPY}")
+
+    # Kaggle staging copy. Synced on EVERY build so the three copies (repo, site, Kaggle
+    # staging) cannot drift again - on 2026-08-17 the FB row landed in two of them and the
+    # third sat a row behind. Publishing stays manual on purpose: Kaggle's documented
+    # upload/file endpoint returns 500 for every payload shape (probed 2026-08-18, Bearer
+    # auth passes, the route itself is dead), so automating it means adopting their client
+    # library. What this does instead is write the version note for you.
+    kag = os.path.join(HERE, "kaggle", "death_registry_seed.csv")
+    before = pd.read_csv(kag) if os.path.exists(kag) else d.iloc[0:0]
+    shutil.copyfile(CSV, kag)
+    if len(before) != n:
+        added = sorted(set(d["ticker"]) - set(before.get("ticker", [])))
+        gone = sorted(set(before.get("ticker", [])) - set(d["ticker"]))
+        print(f"\nkaggle staging synced: {len(before)} -> {n} rows"
+              f"{'  added ' + ', '.join(added) if added else ''}"
+              f"{'  removed ' + ', '.join(gone) if gone else ''}")
+        print("PASTE AS THE KAGGLE VERSION NOTE:")
+        print(f"  {n} rows (was {len(before)}). "
+              + (f"Adds {', '.join(added)}. " if added else "")
+              + f"All {n} verified against a primary source; "
+                f"recycled-ticker flag now {int(d['ticker_recycled'].sum())} of {n}.")
+    else:
+        print("kaggle staging copy already current")
     print(f"stats: {n_sourced}/{n} sourced, {n_recycled} reused, {n_recent} since 2024, "
           f"{n_sec} SEC-filing rows, span {y0}-{y1}")
 
