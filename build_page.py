@@ -136,6 +136,8 @@ body.registry .count{{font-family:var(--mono);font-size:.82rem;color:var(--faint
 body.registry .rules{{background:var(--panel-hi);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:1.1rem 1.3rem;margin-top:1rem}}
 body.registry .rules p{{margin:.35rem 0;font-size:.92rem}}
 body.registry a{{color:var(--accent-hi)}}
+body.registry .brand{{color:var(--fg)}}          /* the page link colour must not repaint the topbar */
+body.registry .nav a{{color:var(--muted)}}
 body.registry .dl{{display:inline-block;margin-top:.8rem;font-family:var(--mono);font-size:.85rem}}
 body.registry .fine{{font-size:.85rem;color:var(--faint);line-height:1.55;margin-top:2.4rem}}
 body.registry .mini{{max-width:26rem}}
@@ -143,6 +145,12 @@ body.registry .mini td{{padding:.4rem .8rem}}
 </style>
 </head>
 <body class="registry">
+<div class="topbar"><div class="in">
+  <a class="brand" href="index.html">Ayan Jain &middot; Backtest Audit</a>
+  <nav class="nav">
+    <a href="index.html">&larr; Back to the site</a>
+  </nav>
+</div></div>
 <div class="wrap">
   <div class="kick">The US Death Registry</div>
   <h1>Every company missing from free S&amp;P 500 data, and what happened to it.</h1>
