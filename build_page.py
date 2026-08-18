@@ -45,15 +45,24 @@ CREDITS = [("FB", "u/White_Fang_ on r/algotrading", "asked how a name that was b
            ("33 candidates", "u/White_Fang_ on r/algotrading", "pointed out that the probe misses "
             "exits where the ticker still resolves because a new issuer took the symbol, EMC "
             "being his example; a first-bar scan of both vintages found 35 such names, only 2 "
-            "of which were already here")]
+            "of which were already here"),
+           ("S + META", "u/White_Fang_ on r/algotrading", "caught the queue contradicting the "
+            "file: S was cited as an example while still unsourced, and META sat queued as if "
+            "unknown when it is the FB row after its rename. The dedup that let META through "
+            "matched on ticker strings, on the exact project whose point is that ticker strings "
+            "lie. S is now a sourced row; META resolves to FB")]
 
 # Candidates found by the first-bar scan: their price history starts AFTER the vintage date they
 # were supposedly a member of, which is the signature of a symbol now owned by someone else.
 # NOT in the CSV, because every row in the CSV has a primary source and these do not yet. They
 # are listed publicly anyway so the queue is visible rather than a private to-do.
 PENDING = ["ADT", "APC", "APTV", "BEAM", "BTU", "CAM", "CEG", "CPRI", "DELL", "DOW", "DV",
-           "EMC", "FOXA", "HOT", "LIFE", "META", "MHS", "NE", "NSM", "PCL", "PCS", "POM",
-           "Q", "S", "SCG", "SE", "SHLD", "SLE", "SNDK", "SPLS", "STI", "SUN", "TE"]
+           "EMC", "FOXA", "HOT", "LIFE", "MHS", "NE", "NSM", "PCL", "PCS", "POM",
+           "Q", "SCG", "SE", "SHLD", "SLE", "SNDK", "SPLS", "STI", "SUN", "TE"]
+# Graduated off the queue 2026-08-18: S entered the CSV with its NYSE delisting notice, and META
+# was never a new case at all - it is the FB row wearing its post-rename symbol. It sat in the
+# queue because the dedup against the file matched on TICKER STRINGS, on a project whose entire
+# point is that ticker strings lie about identity. Caught by u/White_Fang_.
 
 
 def esc(x):
@@ -263,7 +272,12 @@ body.registry .mini td{{padding:.4rem .8rem}}
   2016. These are <strong>not</strong> in the CSV, because every row in it rests on a primary
   source and these do not yet. They are published here so the queue is visible rather than
   private, and they need triage: some are a different company wearing the symbol, some are the
-  same company relisting after bankruptcy or a take-private, which is a different thing.</p>
+  same company relisting after bankruptcy or a take-private, which is a different thing. Two
+  from the scan have already graduated: <code>S</code> moved into the file with its NYSE
+  delisting notice, and <code>META</code> came off the queue because it was never a new case,
+  it is the <code>FB</code> row after its rename. It slipped into the queue at all because the
+  dedup against the file matched on ticker strings, on the exact project whose point is that
+  ticker strings lie about identity.</p>
   <p class="pending">{pending_list}</p>
 
   <h2>Credited contributions</h2>
@@ -311,6 +325,17 @@ body.registry .mini td{{padding:.4rem .8rem}}
     shutil.copyfile(CSV, CSV_COPY)
     print(f"wrote {OUT} ({len(page):,} bytes) from {n} rows")
     print(f"copied csv -> {CSV_COPY}")
+
+    # The homepage nav dropdown carries the row count too. It was hand-typed and went stale
+    # the first time a row landed (found 2026-08-18: dropdown said 144, file said 145), so it
+    # is now patched on every build - same rule as the page: no count typed by hand survives.
+    idx_path = os.path.join(SITE, "index.html")
+    idx = open(idx_path, encoding="utf-8").read()
+    import re as _re
+    idx2 = _re.sub(r"\d+ sourced exits", f"{n} sourced exits", idx)
+    if idx2 != idx:
+        open(idx_path, "w", encoding="utf-8").write(idx2)
+        print(f"index.html dropdown count synced -> {n}")
 
     # Kaggle staging copy. Synced on EVERY build so the three copies (repo, site, Kaggle
     # staging) cannot drift again - on 2026-08-17 the FB row landed in two of them and the
