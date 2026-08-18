@@ -41,7 +41,19 @@ FATE_ORDER = ["acquisition", "merger", "take-private", "renamed",
 # Rows that exist because a reader asked or corrected something. The page promises credit for
 # corrections, so the credit has to be visible on the page, not only in the commit history.
 CREDITS = [("FB", "u/White_Fang_ on r/algotrading", "asked how a name that was both renamed "
-            "and had its ticker recycled is handled, which is how FB got into the file")]
+            "and had its ticker recycled is handled, which is how FB got into the file"),
+           ("33 candidates", "u/White_Fang_ on r/algotrading", "pointed out that the probe misses "
+            "exits where the ticker still resolves because a new issuer took the symbol, EMC "
+            "being his example; a first-bar scan of both vintages found 35 such names, only 2 "
+            "of which were already here")]
+
+# Candidates found by the first-bar scan: their price history starts AFTER the vintage date they
+# were supposedly a member of, which is the signature of a symbol now owned by someone else.
+# NOT in the CSV, because every row in the CSV has a primary source and these do not yet. They
+# are listed publicly anyway so the queue is visible rather than a private to-do.
+PENDING = ["ADT", "APC", "APTV", "BEAM", "BTU", "CAM", "CEG", "CPRI", "DELL", "DOW", "DV",
+           "EMC", "FOXA", "HOT", "LIFE", "META", "MHS", "NE", "NSM", "PCL", "PCS", "POM",
+           "Q", "S", "SCG", "SE", "SHLD", "SLE", "SNDK", "SPLS", "STI", "SUN", "TE"]
 
 
 def esc(x):
@@ -80,6 +92,9 @@ def main():
             f'<td class="mono">{r["exit_date"].date()}</td>'
             f'<td class="mono src"><a href="{esc(r["source_url"])}" rel="nofollow noopener" '
             f'target="_blank">{esc(host(r["source_url"]))}</a></td></tr>')
+
+    pending_list = ", ".join(f"<code>{esc(t)}</code>" for t in PENDING)
+    n_pending = len(PENDING)
 
     credit_rows = "".join(
         f'<tr><td class="mono tick">{esc(t)}</td><td class="who">{esc(who)}'
@@ -141,6 +156,7 @@ body.registry .nav a{{color:var(--muted)}}
 body.registry .dl{{display:inline-block;margin-top:.8rem;font-family:var(--mono);font-size:.85rem}}
 body.registry .fine{{font-size:.85rem;color:var(--faint);line-height:1.55;margin-top:2.4rem}}
 body.registry .mini{{max-width:26rem}}
+body.registry .pending{{font-family:var(--mono);font-size:.86rem;line-height:2;max-width:none}}
 body.registry .mini td{{padding:.4rem .8rem}}
 </style>
 </head>
@@ -237,6 +253,18 @@ body.registry .mini td{{padding:.4rem .8rem}}
     <p>4. A wrong row is a bug report I want. If you can point at a document, send it and it gets
     fixed with the source credited.</p>
   </div>
+
+  <h2>Under verification, not in the file yet</h2>
+  <p>A first-bar scan of the 2010 and 2015 vintages turns up {n_pending} tickers whose price
+  history begins <em>after</em> the date they were supposedly index members. That is the
+  signature of a symbol a different issuer now owns, and it is the failure the invisibility
+  probe cannot see, because the download succeeds. EMC is the clearest: it resolves today as an
+  emerging-markets ETF whose history starts 2023-05-15, while EMC Corp was bought by Dell in
+  2016. These are <strong>not</strong> in the CSV, because every row in it rests on a primary
+  source and these do not yet. They are published here so the queue is visible rather than
+  private, and they need triage: some are a different company wearing the symbol, some are the
+  same company relisting after bankruptcy or a take-private, which is a different thing.</p>
+  <p class="pending">{pending_list}</p>
 
   <h2>Credited contributions</h2>
   <p>Rows that exist because someone asked or corrected something.</p>
