@@ -147,6 +147,7 @@ def main():
 <meta property="og:title" content="The US Death Registry">
 <meta property="og:description" content="Every company missing from free S&amp;P 500 data, and what actually happened to it. {n} sourced exits, {y0}-{y1}.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://financebroski.com/og-v2.png">
 <link rel="icon" href="mark.png">
 <link rel="stylesheet" href="style.css">
 <style>
