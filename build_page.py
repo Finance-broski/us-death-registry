@@ -13,9 +13,33 @@ import datetime as dt
 import html
 import os
 import shutil
+import sys
 import urllib.parse as up
 
 import pandas as pd
+
+
+def push_kaggle(note):
+    """Version the live Kaggle dataset from the staging folder. Uses the LEGACY kaggle.json
+    key in C:\\trading-secrets (the raw HTTP upload route 500s and the newer scoped access
+    tokens 401 on writes - both probed and dead). Uploads exactly the three live CSVs so a
+    version can never drop a file or leak the notebook/description into the file set."""
+    import json
+    import tempfile
+    creds = json.load(open(r"C:\trading-secrets\kaggle.json"))
+    os.environ["KAGGLE_USERNAME"] = creds["username"]
+    os.environ["KAGGLE_KEY"] = creds["key"]
+    from kaggle.api.kaggle_api_extended import KaggleApi
+    up_dir = tempfile.mkdtemp(prefix="kaggle_up_")
+    for f in ["death_registry_seed.csv", "sp500_membership_vintages.csv",
+              "visibility_probe_2026-07.csv"]:
+        shutil.copyfile(os.path.join(HERE, "kaggle", f), os.path.join(up_dir, f))
+    with open(os.path.join(up_dir, "dataset-metadata.json"), "w") as f:
+        json.dump({"id": "financebroski/s-and-p-500-survivorship-bias-point-in-time"}, f)
+    api = KaggleApi()
+    api.authenticate()
+    r = api.dataset_create_version(up_dir, version_notes=note, quiet=True)
+    print(f"kaggle version pushed: {r}")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = r"C:\dev\financebroski.github.io"
@@ -339,24 +363,29 @@ body.registry .mini td{{padding:.4rem .8rem}}
 
     # Kaggle staging copy. Synced on EVERY build so the three copies (repo, site, Kaggle
     # staging) cannot drift again - on 2026-08-17 the FB row landed in two of them and the
-    # third sat a row behind. Publishing stays manual on purpose: Kaggle's documented
-    # upload/file endpoint returns 500 for every payload shape (probed 2026-08-18, Bearer
-    # auth passes, the route itself is dead), so automating it means adopting their client
-    # library. What this does instead is write the version note for you.
+    # third sat a row behind. Publishing is AUTOMATED since 2026-08-19 via the official
+    # kaggle client with the legacy kaggle.json key (the raw HTTP upload route 500s; the
+    # newer scoped access tokens 401 on writes - both dead ends were probed before this).
+    # Run with --kaggle to push a version whenever the row count changed.
     kag = os.path.join(HERE, "kaggle", "death_registry_seed.csv")
     before = pd.read_csv(kag) if os.path.exists(kag) else d.iloc[0:0]
     shutil.copyfile(CSV, kag)
     if len(before) != n:
         added = sorted(set(d["ticker"]) - set(before.get("ticker", [])))
         gone = sorted(set(before.get("ticker", [])) - set(d["ticker"]))
+        note = (f"{n} rows (was {len(before)}). "
+                + (f"Adds {', '.join(added)}. " if added else "")
+                + (f"Removes {', '.join(gone)}. " if gone else "")
+                + f"All {n} verified against a primary source; "
+                  f"recycled-ticker flag now {int(d['ticker_recycled'].sum())} of {n}.")
         print(f"\nkaggle staging synced: {len(before)} -> {n} rows"
               f"{'  added ' + ', '.join(added) if added else ''}"
               f"{'  removed ' + ', '.join(gone) if gone else ''}")
-        print("PASTE AS THE KAGGLE VERSION NOTE:")
-        print(f"  {n} rows (was {len(before)}). "
-              + (f"Adds {', '.join(added)}. " if added else "")
-              + f"All {n} verified against a primary source; "
-                f"recycled-ticker flag now {int(d['ticker_recycled'].sum())} of {n}.")
+        if "--kaggle" in sys.argv:
+            push_kaggle(note)
+        else:
+            print("VERSION NOTE (or rerun with --kaggle to push it automatically):")
+            print("  " + note)
     else:
         print("kaggle staging copy already current")
     print(f"stats: {n_sourced}/{n} sourced, {n_recycled} reused, {n_recent} since 2024, "
